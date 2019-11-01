@@ -8,6 +8,15 @@
   </div>
 </template>
 
+<script>
+export default {
+  mounted() {
+    // this.$store.commit('user/SET', ['idToken', 99])
+    this.$store.dispatch('user/GET_USER_SESSION')
+  }
+}
+</script>
+
 <style lang="scss">
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
