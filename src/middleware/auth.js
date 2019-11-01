@@ -1,7 +1,26 @@
-// import store from '@/store/store'
+import store from '@/store/store'
 
-// export default function(to, from, next) {
-//   if (to.meta.requiresAuth && store.getters['user/']) {
-    
-//   }
-// }
+function isLoggedIn() {
+  return store.getters['auth/isLoggedIn']()
+}
+
+export default async function(to, from, next) {
+  try {
+    if (to.meta.requiresAuth) {
+      if (isLoggedIn()) {
+        next()
+      } else {
+        await store.dispatch('user/GET_USER_SESSION')
+        if (isLoggedIn()) {
+          next()
+        } else {
+          next('/login')
+        }
+      }
+    } else {
+      next()
+    }
+  } catch (error) {
+    console.error('[auth middleware]', error)
+  }
+}

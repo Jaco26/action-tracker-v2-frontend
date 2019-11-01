@@ -23,7 +23,7 @@ const universalActions = {
 
   /**
    * 
-   * @typedef OnSuccess
+   * @typedef ResultHandlers
    * @property {Function[]} commits
    * @property {Function[]} dispatches
    */
@@ -33,9 +33,8 @@ const universalActions = {
    * @property {String} url 
    * @property {String} method
    * @property {*} data
-   * @property {Function} callback on successful request, this gets the response object
-   * @property {Function[]} commits
-   * @property {Function[]} dispatches
+   * @property {ResultHandlers} onSuccess on successful request, this gets the response object
+   * @property {ResultHandlers} onError
    */
 
   /**
@@ -43,32 +42,43 @@ const universalActions = {
    * @param {*} ctx 
    * @param {FetchConfig} config 
    */
-  async FETCH(ctx, { method, url, data, commits, dispatches }) {
+  async FETCH(ctx, { method = 'get', withCredentials = false, url = '', data, onSuccess = {}, onError = {} } = {}) {
     try {
       ctx.commit('SET', ['busy', true])
 
-      const res = await this.$axios[method || 'get'](url, data)
+      const res = await this.$axios({ method, url, withCredentials, data })
 
-      if (commits) {
-        commits.forEach(callback => {
-          let commitArgs = callback(res)
-          if (commitArgs.length > 1) {
-            ctx.commit(commitArgs[0], commitArgs[1], { root: !!commitArgs[2] })
-          } else {
-            ctx.commit('SET', commitArgs[0])
-          }
+      if (onSuccess.commits) {
+        onSuccess.commits.forEach(cb => {
+          const [type, payload, isRoot] = cb(res)
+          ctx.commit(type, payload, { root: isRoot })
         })
       }
       
-      if (dispatches) {
-        dispatches.forEach(callback => {
-          const [type, payload, isRoot] = callback(res)
+      if (onSuccess.dispatches) {
+        onSuccess.dispatches.forEach(cb => {
+          const [type, payload, isRoot] = cb(res)
           ctx.dispatch(type, payload, { root: isRoot })
         })
       }
 
     } catch (error) {
       ctx.commit('SET', ['errors', [...ctx.state.errors, error.message]])
+      
+      if (onError.commits) {
+        onError.commits.forEach(cb => {
+          const [type, payload, isRoot] = cb(error)
+          ctx.commit(type, payload, { root: isRoot })
+        })
+      }
+
+      if (onError.dispatches) {
+        onError.dispatches.forEach(cb => {
+          const [type, payload, isRoot] = cb(error)
+          ctx.dispatch(type, payload, { root: isRoot })
+        })
+      }
+
     } finally {
       ctx.commit('SET', ['busy', false])
     }

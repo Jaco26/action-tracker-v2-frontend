@@ -1,6 +1,9 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Home from './views/Home.vue'
+import Login from './views/login.vue'
+
+import authMiddleware from '@/middleware/auth'
 
 Vue.use(Router)
 
@@ -11,7 +14,15 @@ const router = new Router({
     {
       path: '/',
       name: 'home',
-      component: Home
+      component: Home,
+      meta: {
+        requiresAuth: true,
+      }
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: Login,
     },
     {
       path: '/about',
@@ -25,8 +36,7 @@ const router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
-
-  next()
+  authMiddleware(to, from, next)
 })
 
 export default router

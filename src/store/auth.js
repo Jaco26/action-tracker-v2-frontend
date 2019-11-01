@@ -5,7 +5,11 @@ function createAuthService() {
   let _token = null
 
   function setToken(token) {
-    _token = jwt.decode(token)
+    if (token) {
+      _token = jwt.decode(token)
+    } else {
+      _token = null
+    }
   }
 
   function checkLoggedIn() {
@@ -13,7 +17,10 @@ function createAuthService() {
   }
   
   function getPermission() {
-    return _token.user_claims.permission.map(perm => perm.name) || []
+    if (_token) {
+      return _token.user_claims.permission.map(perm => perm.name)
+    }
+    return []
   }
 
   return {
@@ -35,6 +42,7 @@ export default {
   state: initialState(),
   mutations: {
     SET_TOKEN(state, token) {
+      this.$axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
       auth.setToken(token)
       state.permission = auth.getPermission()
     },
