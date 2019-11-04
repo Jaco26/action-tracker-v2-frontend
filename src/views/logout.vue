@@ -1,17 +1,15 @@
 <template>
   <v-layout>
     <v-flex>
-    This be the home page
-
+      <h1>Logout</h1>
     </v-flex>
   </v-layout>
 </template>
 
 <script>
-
 export default {
-  components: {
-
-  },
-};
+  mounted() {
+    this.$store.dispatch('user/LOGOUT')
+  }
+}
 </script>

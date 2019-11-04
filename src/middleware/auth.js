@@ -14,7 +14,7 @@ export default async function(to, from, next) {
         if (isLoggedIn()) {
           next()
         } else {
-          next('/login')
+          next('/access-denied')
         }
       }
     } else {

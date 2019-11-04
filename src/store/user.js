@@ -19,12 +19,13 @@ export default {
         onError: {
           commits: [
             err => {
-              switch (err.response.status) {
-                case 403:
-                  return ['auth/SET_TOKEN', null, true]
-                case 500:
-                  console.log('SERVER ERROR in GET_USER_SESSION')
-                  break
+              if (err.response) {
+                switch (err.response.status) {
+                  case 403:
+                    return ['auth/SET_TOKEN', null, true]
+                  case 500:
+                    console.log('SERVER ERROR in GET_USER_SESSION')
+                }
               }
             },
           ]

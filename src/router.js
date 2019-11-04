@@ -1,7 +1,10 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Home from './views/Home.vue'
-import Login from './views/login.vue'
+import AccessDenied from './views/access-denied'
+import NotFound from './views/not-found'
+import Home from './views/home'
+import Login from './views/login'
+import Logout from './views/logout'
 
 import authMiddleware from '@/middleware/auth'
 
@@ -25,12 +28,27 @@ const router = new Router({
       component: Login,
     },
     {
+      path: '/logout',
+      name: 'logout',
+      component: Logout,
+    },
+    {
       path: '/about',
       name: 'about',
       // route level code-splitting
       // this generates a separate chunk (about.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
-      component: () => import(/* webpackChunkName: "about" */ './views/About.vue')
+      component: () => import(/* webpackChunkName: "about" */ './views/about')
+    },
+    {
+      path: '/access-denied',
+      name: 'access-denied',
+      component: AccessDenied,
+    },
+    {
+      path: '*',
+      name: 'not-found',
+      component: NotFound,
     }
   ]
 })

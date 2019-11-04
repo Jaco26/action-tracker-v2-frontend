@@ -50,15 +50,21 @@ const universalActions = {
 
       if (onSuccess.commits) {
         onSuccess.commits.forEach(cb => {
-          const [type, payload, isRoot] = cb(res)
-          ctx.commit(type, payload, { root: isRoot })
+          const cbResult = cb(res)
+          if (Array.isArray(cbResult)) {
+            const [type, payload, isRoot] = cbResult
+            ctx.commit(type, payload, { root: isRoot })
+          }
         })
       }
       
       if (onSuccess.dispatches) {
         onSuccess.dispatches.forEach(cb => {
-          const [type, payload, isRoot] = cb(res)
-          ctx.dispatch(type, payload, { root: isRoot })
+          const cbResult = cb(res)
+          if (Array.isArray(cbResult)) {
+            const [type, payload, isRoot] = cbResult
+            ctx.dispatch(type, payload, { root: isRoot })
+          }
         })
       }
 
@@ -67,15 +73,21 @@ const universalActions = {
       
       if (onError.commits) {
         onError.commits.forEach(cb => {
-          const [type, payload, isRoot] = cb(error)
-          ctx.commit(type, payload, { root: isRoot })
+          const cbResult = cb(error)
+          if (Array.isArray(cbResult)) {
+            const [type, payload, isRoot] = cbResult
+            ctx.commit(type, payload, { root: isRoot })
+          }
         })
       }
 
       if (onError.dispatches) {
         onError.dispatches.forEach(cb => {
-          const [type, payload, isRoot] = cb(error)
-          ctx.dispatch(type, payload, { root: isRoot })
+          const cbResult = cb(error)
+          if (Array.isArray(cbResult)) {
+            const [type, payload, isRoot] = cbResult
+            ctx.dispatch(type, payload, { root: isRoot })
+          }
         })
       }
 
