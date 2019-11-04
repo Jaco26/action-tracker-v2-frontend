@@ -65,14 +65,17 @@ const router = new Router({
 
 router.beforeEach(async (to, from, next) => {
   try {
+
     const redirect = await authMiddleware(to, from)
 
     if (redirect) return next(redirect)
 
+    else next()
+
   } catch (error) {
+
     console.error('[router.beforeEach error]', error)
-  } finally {
-    next()
+    
   }
 })
 

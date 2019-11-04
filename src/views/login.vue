@@ -1,41 +1,74 @@
 <template>
-  <div>
-    <div class="login">
-      <h3>Login</h3>
-      <div>
-        <label for="login-username">Username</label>
-        <input type="text" id="login-username" v-model="login.username">
-      </div>
-      <div>
-        <label for="login-password">Password</label>
-        <input type="text" id="login-password" v-model="login.password">
-      </div>
-      <div>
-        <button @click="onLogin">Login</button>
-      </div>
-    </div>
+  <v-layout justify-center align-center class="page">
+    <v-flex shrink>
+      <v-card outlined min-width="300">
 
-    <div class="register">
-      <h3>Register</h3>
-      <div>
-        <label for="register-username">Username</label>
-        <input type="text" id="register-username" v-model="register.username">
-      </div>
-      <div>
-        <label for="register-password">Password</label>
-        <input type="text" id="register-password" v-model="register.password">
-      </div>
-      <div>
-        <button @click="onRegister">Register</button>
-      </div>
-    </div>
-  </div>
+        <template v-if="isLoggingIn">
+          <v-card-title>
+            Login
+          </v-card-title>
+          <v-card-text>
+            <v-text-field
+              outlined
+              label="Username"
+              placeholder="enter your username"
+              v-model="login.username"
+            ></v-text-field>
+            <v-text-field
+              outlined
+              type="password"
+              label="Password"
+              placeholder="enter your password"
+              v-model="login.password"
+            ></v-text-field>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn text @click="toggleMode" class="caption">
+              Create an account
+            </v-btn>
+            <v-btn class="primary" @click="onLogin">Login</v-btn>
+          </v-card-actions>
+        </template>
+
+        <template v-else>
+          <v-card-title>
+            Create an account
+          </v-card-title>
+          <v-card-text>
+            <v-text-field
+              outlined
+              label="Username"
+              placeholder="enter your username"
+              v-model="register.username"
+            ></v-text-field>
+            <v-text-field
+              outlined
+              type="password"
+              label="Password"
+              placeholder="enter your password"
+              v-model="register.password"
+            ></v-text-field>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn text @click="toggleMode" class="caption">
+              Cancel
+            </v-btn>
+            <v-btn class="primary" @click="onRegister">Create Account</v-btn>
+          </v-card-actions>
+        </template>
+
+      </v-card>
+    </v-flex>
+  </v-layout>
 </template>
 
 <script>
 export default {
   data() {
     return {
+      isLoggingIn: true,
       login: {
         username: '',
         password: '',
@@ -60,6 +93,9 @@ export default {
         password: this.register.password,
       })
       this.$router.push('/me')
+    },
+    toggleMode() {
+      this.isLoggingIn = !this.isLoggingIn
     }
   }
 }
