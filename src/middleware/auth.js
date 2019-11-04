@@ -1,24 +1,15 @@
 import store from '@/store/store'
 
-function isLoggedIn() {
-  return store.getters['auth/isLoggedIn']()
-}
-
-export default async function(to, from, next) {
+export default async function(to, from) {
   try {
+    store.commit('auth/SYNC_IS_LOGGED_IN')
     if (to.meta.requiresAuth) {
-      if (isLoggedIn()) {
-        next()
-      } else {
+      if (!store.state.auth.isLoggedIn) {
         await store.dispatch('user/GET_USER_SESSION')
-        if (isLoggedIn()) {
-          next()
-        } else {
-          next('/access-denied')
+        if (!store.state.auth.isLoggedIn) {
+          return '/access-denied'
         }
       }
-    } else {
-      next()
     }
   } catch (error) {
     console.error('[auth middleware]', error)

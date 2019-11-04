@@ -1,7 +1,7 @@
 <template>
   <v-layout>
     <v-flex>
-      <h1>This is an about page</h1>
+      <h2>Profile</h2>
     </v-flex>
   </v-layout>
 </template>

@@ -47,17 +47,19 @@ export default {
     }
   },
   methods: {
-    onLogin() {
-      this.$store.dispatch('user/LOGIN', {
+    async onLogin() {
+      await this.$store.dispatch('user/LOGIN', {
         username: this.login.username,
         password: this.login.password,
       })
+      this.$router.push('/me')
     },
-    onRegister() {
-      this.$store.dispatch('user/REGISTER', {
+    async onRegister() {
+      await this.$store.dispatch('user/REGISTER', {
         username: this.register.username,
         password: this.register.password,
       })
+      this.$router.push('/me')
     }
   }
 }

@@ -32,7 +32,8 @@ function createAuthService() {
 
 function initialState() {
   return {
-    permission: []
+    permission: [],
+    isLoggedIn: false,
   }
 }
 
@@ -45,11 +46,15 @@ export default {
       this.$axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
       auth.setToken(token)
       state.permission = auth.getPermission()
+      state.isLoggedIn = auth.checkLoggedIn()
     },
-  },
-  getters: {
-    isLoggedIn() {
-      return () => auth.checkLoggedIn()
+    SYNC_IS_LOGGED_IN(state) {
+      state.isLoggedIn = auth.checkLoggedIn()
     }
-  }
+  },
+  // getters: {
+  //   isLoggedIn() {
+  //     return () => auth.checkLoggedIn()
+  //   }
+  // }
 }
